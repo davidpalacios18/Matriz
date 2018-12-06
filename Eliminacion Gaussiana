@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <iostream>
+#include <iomanip>
+#include <string>
+
+using namespace std;
+
+void datos(int *tam, float mat1[][102]);
+void esc_data(int tam1, float mat2[][102]);
+void solucion(int Dim, float Sist[][102]);
+
+int main(void){
+    int i, tam;
+    float mat[101][102];
+    datos(&tam,mat);
+    cout<<"\n\n\n Matriz A: \n\n";
+    esc_data(tam,mat);
+    solucion(tam,mat);
+    cout<<"\n\n Solución: \n\n";
+    for(i=1;i<=tam;i++)
+        cout<<"\n X"<<i<<" = "<<mat[i][tam+1];
+
+    //system("PAUSE()");
+    return (0);
+}
+
+void datos (int *tam, float matl[][102]){
+     int j,k;
+     cout<<"\n\n Sistema de Ecuaciones Eliminacion Gaussiana";
+     cout<<"\n\n Numero de Incognitas: ";
+     cin>> *tam;
+
+     cout<<"\n\n MATRIZ A: \n";
+          for(j=1;j<=*tam; j++)
+              for(k=1; k<=*tam;k++){
+                       cout<<"\n VALORES MATRIZ "<<"["<<j<<","<<k<<"] = ";
+                       cin>>matl[j][k];
+                       }
+           cout<<"\n\n\n RESULTADO: \n";
+           for(j=1; j<=*tam;j++){
+                    cout<<"\n Vector "<<j<<": ";
+                    cin>>matl[j][*tam+1];
+           }
+}
+
+void esc_data(int tamano, float mat2[][102]){
+     int x,y;
+     for(x=1;x<=tamano;x++){
+         for(y=1;y<=(tamano+1);y++){
+            cout<<mat2[x][y];
+            if(y==tamano)
+               cout<<" | ";
+         }
+       cout<<"\n";
+     }
+}
+
+void solucion(int tam, float mat[][102])
+{
+    int res,i,j,k,m;
+    float col_pivote,x;
+
+
+    // Ciclo para establecer la diagonal de 1
+    for(i=1;i<=tam;i++){
+        res=0;m=i;
+        while(res==0){
+           if((mat[m][i]>0.0000001)||((mat[m][i]<-0.0000001))){   // "||" Or logico
+                res=1;
+            }
+            else
+                m++;
+            }
+
+        col_pivote=mat[m][i];
+
+        for(j=1;j<=(tam+1);j++){
+            x=mat[m][j];
+            mat[m][j]=mat[i][j];
+            mat[i][j]=x/col_pivote;
+        }
+
+        for(k=i+1;k<=tam;k++){
+            x=mat[k][i];
+            for(j=i;j<=(tam+1);j++){
+                mat[k][j]=mat[k][j]-x*mat[i][j];
+            }
+        }
+    }
+
+    for(i=tam;i>=1;i--)
+        for(j=(i-1);j>=1;j--){
+        mat[j][tam+1]=mat[j][tam+1]-mat[j][i]*mat[i][tam+1];
+        mat[j][i]=0;
+       }
+}
